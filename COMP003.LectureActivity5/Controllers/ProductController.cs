@@ -57,6 +57,39 @@ namespace COMP003.LectureActivity5.Controllers
             //return 204 to indicate success
             return NoContent();
         }
+        //delete product
+        [HttpDelete("{id}")]
+        public IActionResult DeleteProduct(int id)
+        {
+            var product = ProductStore.Products.FirstOrDefault(p => p.Id == id);
 
+            if (product == null)
+                return NotFound();
+
+            ProductStore.Products.Remove(product);
+
+            return NoContent();
+        }
+        [HttpGet("filter")]
+        
+        public ActionResult<List<Product>> FilterProducts(decimal price)
+        {
+            var filteredProducts = ProductStore.Products
+                .Where(p => p.Price == price)
+                .OrderBy(p => p.Price)
+                .ToList();
+
+            return Ok(filteredProducts);
+        }
+
+        [HttpGet("Names")]
+        public ActionResult<List<String>> GetProductNames()
+        {
+            var productNames = ProductStore.Products
+                .OrderBy(p => p.Name)
+                .Select(p => p.Name)
+                .ToList();
+            return Ok(productNames);
+        }
     }
 }
